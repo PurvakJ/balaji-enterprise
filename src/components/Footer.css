@@ -1,0 +1,451 @@
+/* Footer.css - Balaji Enterprises Premium Brand */
+/* Elegant Gold & Charcoal Palette */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==================== COLOR VARIABLES ==================== */
+:root {
+    --be-gold: #C9A03D;
+    --be-gold-light: #DDB967;
+    --be-gold-dark: #A0761A;
+    --be-charcoal: #1E1E1E;
+    --be-charcoal-light: #2D2D2D;
+    --be-charcoal-dark: #0F0F0F;
+    --be-cream: #FDFBF7;
+    --be-cream-dark: #F5F0E8;
+    --be-text-dark: #1A1A1A;
+    --be-text-light: #6B6B6B;
+    --be-text-muted: #8B8B8B;
+    --be-wa: #25D366;
+    --white: #FFFFFF;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+    --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+    background: linear-gradient(135deg, var(--be-charcoal) 0%, var(--be-charcoal-dark) 100%);
+    color: var(--be-cream);
+    margin-top: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--be-gold), var(--be-gold-light), var(--be-gold-dark), var(--be-gold-light), var(--be-gold));
+    background-size: 200% 100%;
+    animation: gradientMove 3s linear infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+.footer::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    background-image: radial-gradient(circle at 20% 40%, rgba(201, 160, 61, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* ==================== FOOTER CONTAINER ==================== */
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 40px 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 1024px) {
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        padding: 50px 30px 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        padding: 40px 24px 30px;
+    }
+}
+
+/* ==================== FOOTER SECTION ==================== */
+.footer-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+    color: var(--be-gold-light);
+}
+
+.footer-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--be-gold), transparent);
+    border-radius: 2px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.footer-section ul li a:hover {
+    color: var(--be-gold);
+    transform: translateX(5px);
+}
+
+/* ==================== LOGO SECTION ==================== */
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--be-gold), var(--be-gold-dark));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--be-charcoal);
+    transition: var(--transition);
+}
+
+.footer-logo h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--white);
+}
+
+.footer-logo h3::after {
+    display: none;
+}
+
+.brand-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--be-gold-light);
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.brand-description {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 20px;
+}
+
+/* ==================== TRUST BADGES ==================== */
+.trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.trust-badges span {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(4px);
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.trust-badges span:hover {
+    background: rgba(201, 160, 61, 0.2);
+    color: var(--be-gold-light);
+    transform: translateY(-2px);
+}
+
+/* ==================== CONTACT INFO ==================== */
+.contact-info li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.contact-icon {
+    font-size: 1.1rem;
+    min-width: 28px;
+    color: var(--be-gold);
+}
+
+.contact-info li span:last-child {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.contact-info li a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info li a:hover {
+    color: var(--be-gold);
+}
+
+/* ==================== FOOTER BOTTOM ==================== */
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-bottom-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-bottom-content p {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-tagline {
+    letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+    .footer-bottom-content {
+        flex-direction: column;
+        text-align: center;
+        padding: 0 24px;
+        gap: 10px;
+    }
+    
+    .footer-bottom-content p {
+        font-size: 0.7rem;
+    }
+}
+
+/* ==================== HOVER EFFECTS ==================== */
+.footer-section ul li a,
+.contact-info li a {
+    position: relative;
+}
+
+.footer-section ul li a::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--be-gold);
+    transition: var(--transition);
+}
+
+.footer-section ul li a:hover::before {
+    width: 100%;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 480px) {
+    .footer-container {
+        padding: 35px 20px 25px;
+    }
+    
+    .footer-logo {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-section h3 {
+        text-align: center;
+        display: block;
+    }
+    
+    .footer-section h3::after {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+    }
+    
+    .brand-tagline,
+    .brand-description {
+        text-align: center;
+    }
+    
+    .trust-badges {
+        justify-content: center;
+    }
+    
+    .footer-section ul li {
+        text-align: center;
+    }
+    
+    .footer-section ul li a:hover {
+        transform: translateX(0);
+    }
+    
+    .contact-info li {
+        justify-content: center;
+    }
+    
+    .footer-bottom-content {
+        padding: 0 20px;
+    }
+}
+
+/* ==================== SCROLL TO TOP BUTTON (Optional) ==================== */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 45px;
+    height: 45px;
+    background: var(--be-gold);
+    color: var(--be-charcoal);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-top:hover {
+    background: var(--be-gold-light);
+    transform: translateY(-3px);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer-section {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.footer-section:nth-child(1) { animation-delay: 0.1s; }
+.footer-section:nth-child(2) { animation-delay: 0.2s; }
+.footer-section:nth-child(3) { animation-delay: 0.3s; }
+.footer-section:nth-child(4) { animation-delay: 0.4s; }
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--be-charcoal);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--be-gold);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--be-gold-dark);
+}
+
+/* ==================== SELECTION STYLING ==================== */
+::selection {
+    background: var(--be-gold);
+    color: var(--be-charcoal);
+}
+
+::-moz-selection {
+    background: var(--be-gold);
+    color: var(--be-charcoal);
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logo-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }

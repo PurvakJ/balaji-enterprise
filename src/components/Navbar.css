@@ -1,0 +1,552 @@
+/* Navbar.css - Balaji Enterprises Premium Brand */
+/* Elegant Gold & Charcoal Palette */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==================== COLOR VARIABLES ==================== */
+:root {
+    --be-gold: #C9A03D;
+    --be-gold-light: #DDB967;
+    --be-gold-dark: #A0761A;
+    --be-gold-glow: rgba(201, 160, 61, 0.15);
+    --be-charcoal: #1E1E1E;
+    --be-charcoal-light: #2D2D2D;
+    --be-charcoal-dark: #0F0F0F;
+    --be-cream: #FDFBF7;
+    --be-cream-dark: #F5F0E8;
+    --be-text-dark: #1A1A1A;
+    --be-text-light: #6B6B6B;
+    --be-wa: #25D366;
+    --white: #FFFFFF;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+    --transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: transparent;
+    transition: var(--transition);
+    padding: 1.2rem 0;
+}
+
+.navbar.scrolled {
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    padding: 0.8rem 0;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.98);
+}
+
+.navbar.scrolled .logo-main {
+    color: var(--be-charcoal);
+}
+
+.navbar.scrolled .logo-sub {
+    color: var(--be-text-light);
+}
+
+.navbar.scrolled .nav-links a {
+    color: var(--be-charcoal);
+}
+
+.navbar.scrolled .nav-links a:hover,
+.navbar.scrolled .nav-links a.active {
+    color: var(--be-gold);
+}
+
+.navbar.scrolled .phone-btn {
+    background: var(--be-gold);
+    color: var(--be-charcoal);
+    border-color: transparent;
+}
+
+.navbar.scrolled .wa-btn {
+    background: var(--be-wa);
+    color: white;
+    border-color: transparent;
+}
+
+.navbar.scrolled .menu-toggle span {
+    background: var(--be-charcoal);
+}
+
+/* ==================== NAV CONTAINER ==================== */
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0 1.5rem;
+    }
+}
+
+/* ==================== LOGO ==================== */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    transform: translateY(-2px);
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--be-gold), var(--be-gold-dark));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--white);
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.logo:hover .logo-icon {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--white);
+    line-height: 1.2;
+    transition: var(--transition);
+}
+
+.logo-sub {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.75);
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+/* ==================== NAV LINKS ==================== */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--white);
+    transition: var(--transition);
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--be-gold), var(--be-gold-light));
+    transition: var(--transition);
+    border-radius: 2px;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--be-gold-light);
+}
+
+/* ==================== CONTACT BUTTONS ==================== */
+.nav-contact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.phone-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    color: var(--white);
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.phone-btn:hover {
+    background: var(--be-gold);
+    color: var(--be-charcoal);
+    transform: translateY(-2px);
+    border-color: transparent;
+}
+
+.wa-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(37, 211, 102, 0.15);
+    backdrop-filter: blur(8px);
+    color: var(--be-wa);
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    transition: var(--transition);
+    border: 1px solid rgba(37, 211, 102, 0.3);
+}
+
+.wa-btn:hover {
+    background: var(--be-wa);
+    color: white;
+    transform: translateY(-2px);
+    border-color: transparent;
+}
+
+/* ==================== MOBILE MENU TOGGLE ==================== */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.menu-toggle span {
+    width: 100%;
+    height: 2px;
+    background: var(--white);
+    transition: var(--transition);
+    border-radius: 2px;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+    background: var(--be-gold);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+    background: var(--be-gold);
+}
+
+/* ==================== MOBILE STYLES ==================== */
+.mobile-contact {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 380px;
+        height: 100vh;
+        background: linear-gradient(135deg, var(--be-charcoal) 0%, var(--be-charcoal-dark) 100%);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem;
+        transition: var(--transition);
+        z-index: 1000;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-links.mobile-open {
+        right: 0;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem;
+        color: var(--white);
+    }
+
+    .nav-links a::after {
+        bottom: -5px;
+    }
+
+    .nav-contact {
+        display: none;
+    }
+
+    .mobile-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-phone-btn,
+    .mobile-wa-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition);
+    }
+
+    .mobile-phone-btn {
+        background: linear-gradient(135deg, var(--be-gold), var(--be-gold-dark));
+        color: var(--be-charcoal);
+    }
+
+    .mobile-wa-btn {
+        background: var(--be-wa);
+        color: white;
+    }
+
+    .mobile-phone-btn:hover,
+    .mobile-wa-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .navbar.scrolled .nav-links {
+        background: linear-gradient(135deg, var(--white) 0%, var(--be-cream) 100%);
+    }
+
+    .navbar.scrolled .nav-links a {
+        color: var(--be-charcoal);
+    }
+
+    .navbar.scrolled .nav-links a:hover,
+    .navbar.scrolled .nav-links a.active {
+        color: var(--be-gold);
+    }
+
+    .navbar.scrolled .mobile-phone-btn {
+        background: linear-gradient(135deg, var(--be-gold), var(--be-gold-dark));
+        color: var(--be-charcoal);
+    }
+
+    .navbar.scrolled .mobile-wa-btn {
+        background: var(--be-wa);
+        color: white;
+    }
+
+    .navbar.scrolled .menu-toggle span {
+        background: var(--be-charcoal);
+    }
+    
+    .navbar.scrolled .menu-toggle.active span {
+        background: var(--be-gold);
+    }
+}
+
+@media (max-width: 768px) {
+    .logo-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+
+    .logo-main {
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+
+    .logo-sub {
+        font-size: 0.45rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .logo {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .logo-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+
+    .logo-main {
+        font-size: 0.85rem;
+    }
+
+    .logo-sub {
+        font-size: 0.4rem;
+    }
+
+    .nav-links {
+        width: 85%;
+        max-width: 320px;
+    }
+    
+    .nav-links a {
+        font-size: 1rem;
+    }
+    
+    .mobile-phone-btn,
+    .mobile-wa-btn {
+        padding: 12px 20px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Body class when menu is open */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* ==================== HOVER EFFECTS ==================== */
+.navbar:not(.scrolled) .phone-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar:not(.scrolled) .phone-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.navbar:not(.scrolled) .phone-btn:hover::before {
+    left: 100%;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar {
+    animation: fadeInDown 0.5s ease;
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--be-cream);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--be-gold);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--be-gold-dark);
+}
+
+/* ==================== SELECTION STYLING ==================== */
+::selection {
+    background: var(--be-gold);
+    color: var(--be-charcoal);
+}
+
+::-moz-selection {
+    background: var(--be-gold);
+    color: var(--be-charcoal);
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logo-image {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
