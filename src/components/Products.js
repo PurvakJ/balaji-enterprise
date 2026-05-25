@@ -16,8 +16,8 @@ function Products() {
   const [viewMode, setViewMode] = useState('collections');
   const [layoutView, setLayoutView] = useState('grid'); // 'grid' or 'box'
 
-  const phoneNumber = '+917696329012';
-  const whatsappNumber = '917696329012';
+  const phoneNumber = '+919872228109';
+  const whatsappNumber = '919872228109';
 
   const getCategoryDisplayName = useCallback((categoryValue) => {
     const displayNames = {
