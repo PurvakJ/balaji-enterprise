@@ -15,6 +15,18 @@ const Home = () => {
   const whatsappMessage = encodeURIComponent("Hello Balaji Enterprises, I'm interested in your premium mattresses, office chairs, and plastic chairs. I'd like to know more about your products and consultation services.");
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
+  // Image marquee images array
+  const marqueeImages = [
+    "https://i.pinimg.com/1200x/10/07/35/10073560c71c919c757c20ef9b64ccd1.jpg",
+    "https://i.pinimg.com/1200x/4c/be/65/4cbe65b83a2adcef4f7788d1b3acddac.jpg",
+    "https://i.pinimg.com/736x/48/65/84/486584894daa9c735ac98755a933fd6b.jpg",
+    "https://i.pinimg.com/1200x/ad/b3/ef/adb3ef1cf8f706ba99989669b80d728b.jpg",
+    "https://i.pinimg.com/1200x/ca/30/62/ca30629bebeb4066d8aee47ec53d8ccb.jpg",
+    "https://i.pinimg.com/1200x/cd/f7/16/cdf716b266de2dcd1371b014cc657340.jpg"
+  ];
+
+  // Duplicate images for seamless loop
+  const allMarqueeImages = [...marqueeImages, ...marqueeImages];
 
   const getCategoryDisplayName = useCallback((categoryValue) => {
     const displayNames = {
@@ -59,7 +71,6 @@ const Home = () => {
       setCurrentImageIndex((prevIndex) => (prevIndex - 1 + selectedProduct.images.length) % selectedProduct.images.length);
     }
   };
-
 
   // Categories
   const categories = [
@@ -265,14 +276,33 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Image Marquee Section */}
+      <section className="marquee-section">
+        <div className="container">
+          <div className="section-header reveal">
+            <div className="section-badge-new">Our Gallery</div><br></br>
+            <h2>Craftsmanship <span>in Focus</span></h2>
+            <p>Witness the quality that defines Balaji Enterprises</p>
+          </div>
+        </div>
+        <div className="marquee-container">
+          <div className="marquee-track">
+            {allMarqueeImages.map((img, idx) => (
+              <div key={idx} className="marquee-item">
+                <img src={img} alt={`Craftsmanship ${idx + 1}`} loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Showreel / Manufacturing Excellence */}
       <section className="excellence-section">
         <div className="container">
           <div className="excellence-container">
             <div className="excellence-content reveal-left">
-              <div className="section-badge-new" style={{background: 'rgba(212, 175, 55, 0.15)', color: 'var(--accent-gold)'}}>Our Legacy</div>
-              <h2>Manufacturing <span style={{color: 'var(--accent-gold)'}}>Excellence</span> Since 1995</h2>
+              <div className="section-badge-new" style={{background: 'rgba(212, 175, 55, 0.15)', color: 'var(--gold)'}}>Our Legacy</div>
+              <h2>Manufacturing <span style={{color: 'var(--gold)'}}>Excellence</span> Since 1995</h2>
               <p>With decades of experience, we've perfected the art of creating furniture that combines durability with aesthetic appeal. Every product undergoes rigorous quality testing.</p>
               <div className="excellence-stats">
                 <div className="excellence-stat">
@@ -300,8 +330,8 @@ const Home = () => {
       <section className="category-showcase">
         <div className="container">
           <div className="section-header reveal">
-            <div className="section-badge-new">Shop by Category</div>
-            <h2>Find Your <span style={{color: 'var(--accent-gold)'}}>Perfect Match</span></h2>
+            <div className="section-badge-new">Shop by Category</div><br></br>
+            <h2>Find Your <span style={{color: 'var(--gold)'}}>Perfect Match</span></h2>
             <p>Tailored solutions for every need - home, office, or commercial</p>
           </div>
           <div className="category-grid">
@@ -325,8 +355,8 @@ const Home = () => {
       <section className="products-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="section-badge-new">Best Sellers</div>
-            <h2>Featured <span style={{color: 'var(--accent-gold)'}}>Products</span></h2>
+            <div className="section-badge-new">Best Sellers</div><br></br>
+            <h2>Featured <span style={{color: 'var(--gold)'}}>Products</span></h2>
             <p>Our most loved collections trusted by thousands</p>
           </div>
           <div className="products-slider-container">
@@ -348,7 +378,6 @@ const Home = () => {
                       </span>
                       <h3>{product.name}</h3>
                       {/*<div className="product-price">₹{product.price?.toLocaleString() || '0'}</div>*/}
-
                     </div>
                   </div>
                 </div>
@@ -387,7 +416,6 @@ const Home = () => {
                 </span>
                 <h2>{selectedProduct.name}</h2>
                 {/*<div className="modal-price">₹{selectedProduct.price?.toLocaleString() || '0'}</div>*/}
-
                 <p>{selectedProduct.description || 'Experience premium comfort and durability with Balaji Enterprises. Engineered for excellence.'}</p>
                 <div className="modal-buttons">
                   <a href={`tel:${phoneNumber}`} className="btn-primary" style={{textAlign: 'center'}}>📞 Call for Best Price</a>
@@ -401,31 +429,31 @@ const Home = () => {
       )}
 
       {/* Pillars Section */}
-<section className="pillars-section">
-  <div className="container">
-    <div className="section-header reveal">
-      <div className="section-badge-new" style={{background: 'rgba(212, 175, 55, 0.15)', color: 'var(--gold)'}}>Why Choose Us</div>
-      <h2 style={{color: 'white'}}>Built on <span style={{color: 'var(--gold)'}}>Trust & Quality</span></h2>
-      <p style={{color: 'rgba(255, 255, 255, 0.8)'}}>Every product from Balaji Enterprises is a testament to quality and care</p>
-    </div>
-    <div className="pillars-grid">
-      {pillars.map((pillar, index) => (
-        <div key={index} className="pillar-card reveal" style={{transitionDelay: `${index * 0.1}s`}}>
-          <div className="pillar-icon">{pillar.icon}</div>
-          <h3>{pillar.title}</h3>
-          <p>{pillar.description}</p>
+      <section className="pillars-section">
+        <div className="container">
+          <div className="section-header reveal">
+            <div className="section-badge-new" style={{background: 'rgba(212, 175, 55, 0.15)', color: 'var(--gold)'}}>Why Choose Us</div><br></br>
+            <h2 style={{color: 'white'}}>Built on <span style={{color: 'var(--gold)'}}>Trust & Quality</span></h2>
+            <p style={{color: 'rgba(255, 255, 255, 0.8)'}}>Every product from Balaji Enterprises is a testament to quality and care</p>
+          </div>
+          <div className="pillars-grid">
+            {pillars.map((pillar, index) => (
+              <div key={index} className="pillar-card reveal" style={{transitionDelay: `${index * 0.1}s`}}>
+                <div className="pillar-icon">{pillar.icon}</div>
+                <h3>{pillar.title}</h3>
+                <p>{pillar.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Testimonials Section */}
       <section className="testimonials-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="section-badge-new">Testimonials</div>
-            <h2>Trusted by <span style={{color: 'var(--accent-gold)'}}>Thousands</span></h2>
+            <div className="section-badge-new">Testimonials</div><br></br>
+            <h2>Trusted by <span style={{color: 'var(--gold)'}}>Thousands</span></h2>
             <p>Real stories from our happy customers</p>
           </div>
           <div className="testimonials-grid">
@@ -446,21 +474,21 @@ const Home = () => {
         </div>
       </section>
 
-{/* CTA Section */}
-<section className="cta-section">
-  <div className="cta-overlay"></div>
-  <div className="stars-bg"></div>
-  <div className="container">
-    <div className="reveal">
-      <h2>Ready for the <span style={{color: 'var(--gold)'}}>Ultimate Comfort Experience?</span></h2>
-      <p>Join 50,000+ happy customers who trust Balaji Enterprises for their furniture needs</p>
-      <div className="cta-buttons">
-        <Link to="/products" className="btn-primary">Explore Collection →</Link>
-        <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-outline-light">💬 WhatsApp Inquiry</a>
-      </div>
-    </div>
-  </div>
-</section>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="cta-overlay"></div>
+        <div className="stars-bg"></div>
+        <div className="container">
+          <div className="reveal">
+            <h2>Ready for the <span style={{color: 'var(--gold)'}}>Ultimate Comfort Experience?</span></h2>
+            <p>Join 50,000+ happy customers who trust Balaji Enterprises for their furniture needs</p>
+            <div className="cta-buttons">
+              <Link to="/products" className="btn-primary">Explore Collection →</Link>
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-outline-light">💬 WhatsApp Inquiry</a>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

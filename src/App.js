@@ -89,7 +89,7 @@ function LoadingScreen({ onLoad }) {
         <div className="logo-wrapper">
           <div className="loader-logo">
           <img
-    src="https://i.postimg.cc/G3sSFqGg/871986e1-b18c-470c-8265-4a4ab45e1906.png"
+    src="https://i.postimg.cc/pybSjnsJ/871986e1-b18c-470c-8265-4a4ab45e1906-removebg-preview.png"
     alt="Balaji Enterprise Logo"
     className="logo-image"
   />
