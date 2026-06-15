@@ -35,7 +35,11 @@ const Home = () => {
       'plastic-chair': 'Heavy Duty Chair',
       'orthopedic': 'Orthopedic Support',
       'memory-foam': 'Memory Foam',
-      'executive': 'Executive Collection'
+      'executive': 'Executive Collection',
+      'visitor': 'Visitor Chair',
+      'reception': 'Reception Chair',
+      'study': 'Study Chair',
+      'dining': 'Dining Chair'
     };
     return displayNames[categoryValue] || 
            categoryValue?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -48,7 +52,11 @@ const Home = () => {
       'plastic-chair': '🪑',
       'orthopedic': '🩺',
       'memory-foam': '🌀',
-      'executive': '👔'
+      'executive': '👔',
+      'visitor': '👥',
+      'reception': '✨',
+      'study': '📚',
+      'dining': '🍽️'
     };
     return icons[category] || '🏷️';
   }, []);
@@ -72,6 +80,20 @@ const Home = () => {
     }
   };
 
+  // Helper function to get random products
+  const getRandomProducts = (productsArray, count = 3) => {
+    if (!productsArray || productsArray.length === 0) return [];
+    // Create a copy of the array
+    const shuffled = [...productsArray];
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    // Return first 'count' items
+    return shuffled.slice(0, count);
+  };
+
   // Categories
   const categories = [
     { name: "Premium Mattresses", icon: "🛌", link: "/products?category=mattress", description: "Orthopedic & memory foam options", image: "https://i.pinimg.com/1200x/10/07/35/10073560c71c919c757c20ef9b64ccd1.jpg" },
@@ -90,8 +112,16 @@ const Home = () => {
     try {
       const data = await getProducts();
       const validProducts = data.filter(product => product && product.id);
-      const featured = validProducts.filter(p => p.featured === true);
-      let productsToShow = featured.length >= 3 ? featured.slice(0, 6) : validProducts.slice(0, 6);
+      
+      // Get random products instead of just featured ones
+      let productsToShow;
+      if (validProducts.length >= 3) {
+        // Get 3 random products from all products
+        productsToShow = getRandomProducts(validProducts, 3);
+      } else {
+        productsToShow = validProducts;
+      }
+      
       setFeaturedProducts(productsToShow);
     } catch (error) {
       console.error('Error loading products:', error);
@@ -101,7 +131,7 @@ const Home = () => {
           name: "Orthopedic Memory Foam Mattress",
           price: 24999,
           description: "Premium 8-inch memory foam mattress with orthopedic support for back pain relief. Breathable fabric and anti-sagging technology for years of comfort.",
-          images: ["https://images-cdn.ubuy.co.in/669eeae2e620e2469e48f254-3-inch-memory-foam-mattress-topper.jpg"],
+          images: ["https://images-cdn.ubuy.co.in/669eeae2e620e2469e48f254-3-inch-memory-foam-mattress-topper.jpg", "https://www.rentomojo.com/blog/wp-content/uploads/2025/08/benefits-of-orthopedic-mattress.png"],
           category: "mattress",
           featured: true
         },
@@ -149,9 +179,47 @@ const Home = () => {
           images: ["https://sealy.in/cdn/shop/articles/Checking_the_memory_foam_layer_of_a_mattress.png?crop=center&height=1200&v=1763952574&width=1200"],
           category: "plastic-chair",
           featured: true
+        },
+        {
+          id: 7,
+          name: "Mid Back Visitor Chair",
+          price: 8999,
+          description: "Comfortable visitor chair for office reception areas with padded seat and backrest.",
+          images: ["https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg?auto=compress&cs=tinysrgb&w=800"],
+          category: "visitor",
+          featured: true
+        },
+        {
+          id: 8,
+          name: "Reception Sofa Chair",
+          price: 15999,
+          description: "Premium reception chair with plush cushioning and elegant design for corporate lobbies.",
+          images: ["https://images.pexels.com/photos/276582/pexels-photo-276582.jpeg?auto=compress&cs=tinysrgb&w=800"],
+          category: "reception",
+          featured: true
+        },
+        {
+          id: 9,
+          name: "Ergonomic Study Chair",
+          price: 7999,
+          description: "Comfortable study chair for students with adjustable height and lumbar support.",
+          images: ["https://images.pexels.com/photos/1957477/pexels-photo-1957477.jpeg?auto=compress&cs=tinysrgb&w=800"],
+          category: "study",
+          featured: true
+        },
+        {
+          id: 10,
+          name: "Modern Dining Chair Set",
+          price: 12999,
+          description: "Set of 4 modern dining chairs with elegant design and sturdy construction.",
+          images: ["https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=800"],
+          category: "dining",
+          featured: true
         }
       ];
-      setFeaturedProducts(fallbackProducts);
+      // Get random products from fallback as well
+      const randomFallbackProducts = getRandomProducts(fallbackProducts, 3);
+      setFeaturedProducts(randomFallbackProducts);
     }
   }, []);
 
@@ -184,6 +252,15 @@ const Home = () => {
     loadProducts();
     loadReviews();
   }, [loadProducts, loadReviews]);
+
+  // Refresh random products every 30 seconds (optional - for dynamic feel)
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      loadProducts();
+    }, 30000); // Refresh every 30 seconds
+    
+    return () => clearInterval(intervalId);
+  }, [loadProducts]);
 
   useEffect(() => {
     setCurrentImageIndex(0);
@@ -351,17 +428,17 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Products Section */}
+      {/* Products Section - Random Products */}
       <section className="products-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="section-badge-new">Best Sellers</div><br></br>
-            <h2>Featured <span style={{color: 'var(--gold)'}}>Products</span></h2>
-            <p>Our most loved collections trusted by thousands</p>
+            <div className="section-badge-new">Handpicked For You</div><br></br>
+            <h2>Discover Our <span style={{color: 'var(--gold)'}}>Random Picks</span></h2>
+            <p>Fresh selections updated regularly - every visit brings new surprises!</p>
           </div>
           <div className="products-slider-container">
             <div className="products-slider-track" ref={sliderRef}>
-              {featuredProducts.slice(0, 3).map((product, index) => (
+              {featuredProducts.map((product, index) => (
                 <div key={product.id} className="product-slide">
                   <div className="product-card" onClick={() => setSelectedProduct(product)}>
                     <div className="product-media">
@@ -370,23 +447,28 @@ const Home = () => {
                       ) : (
                         <div className="image-placeholder">{getCategoryIcon(product.category)}</div>
                       )}
-                      {product.featured && <div className="product-tag">⭐ Bestseller</div>}
                     </div>
                     <div className="product-details">
                       <span className="product-category">
                         {getCategoryIcon(product.category)} {getCategoryDisplayName(product.category)}
                       </span>
                       <h3>{product.name}</h3>
-                      {/*<div className="product-price">₹{product.price?.toLocaleString() || '0'}</div>*/}
+                      {/* Uncomment below to show price if needed */}
+                      {/* <div className="product-price">₹{product.price?.toLocaleString() || '0'}</div> */}
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="slider-controls">
-              <button className="slider-arrow" onClick={() => scrollSlider('left')}>❮</button>
-              <button className="slider-arrow" onClick={() => scrollSlider('right')}>❯</button>
-            </div>
+            {featuredProducts.length > 1 && (
+              <div className="slider-controls">
+                <button className="slider-arrow" onClick={() => scrollSlider('left')}>❮</button>
+                <button className="slider-arrow" onClick={() => scrollSlider('right')}>❯</button>
+              </div>
+            )}
+          </div>
+          <div className="refresh-hint" style={{textAlign: 'center', marginTop: '20px', fontSize: '0.8rem', color: 'var(--text-muted)'}}>
+            ✨ New products featured every time you visit!
           </div>
         </div>
       </section>
@@ -399,15 +481,17 @@ const Home = () => {
             <div className="modal-inner">
               <div className="modal-gallery">
                 {selectedProduct.images && selectedProduct.images.length > 0 ? (
-                  <img src={selectedProduct.images[currentImageIndex]} alt={selectedProduct.name} />
+                  <>
+                    <img src={selectedProduct.images[currentImageIndex]} alt={selectedProduct.name} />
+                    {selectedProduct.images.length > 1 && (
+                      <div className="modal-gallery-controls">
+                        <button onClick={prevImage}>❮</button>
+                        <button onClick={nextImage}>❯</button>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div style={{textAlign: 'center', fontSize: '3rem'}}>{getCategoryIcon(selectedProduct.category)}</div>
-                )}
-                {selectedProduct.images && selectedProduct.images.length > 1 && (
-                  <div className="modal-gallery-controls">
-                    <button onClick={prevImage}>❮</button>
-                    <button onClick={nextImage}>❯</button>
-                  </div>
                 )}
               </div>
               <div className="modal-info">
@@ -415,7 +499,8 @@ const Home = () => {
                   {getCategoryIcon(selectedProduct.category)} {getCategoryDisplayName(selectedProduct.category)}
                 </span>
                 <h2>{selectedProduct.name}</h2>
-                {/*<div className="modal-price">₹{selectedProduct.price?.toLocaleString() || '0'}</div>*/}
+                {/* Uncomment below to show price if needed */}
+                {/* <div className="modal-price">₹{selectedProduct.price?.toLocaleString() || '0'}</div> */}
                 <p>{selectedProduct.description || 'Experience premium comfort and durability with Balaji Enterprises. Engineered for excellence.'}</p>
                 <div className="modal-buttons">
                   <a href={`tel:${phoneNumber}`} className="btn-primary" style={{textAlign: 'center'}}>📞 Call for Best Price</a>
