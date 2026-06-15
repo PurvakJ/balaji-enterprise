@@ -19,8 +19,6 @@ function Products() {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
 
-  const phoneNumber = '+919872228109';
-  const whatsappNumber = '919872228109';
 
   const getCategoryDisplayName = useCallback((categoryValue) => {
     const displayNames = {
@@ -205,10 +203,6 @@ function Products() {
 
   const [productImageIndices, setProductImageIndices] = useState({});
 
-  const openWhatsApp = (productName) => {
-    const message = encodeURIComponent(`Hello Balaji Enterprises, I'm interested in the "${productName}". Could you please share more details and the best price?`);
-    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
-  };
 
   const handleCollectionClick = (categoryValue) => {
     setSelectedCollection(categoryValue);
@@ -513,9 +507,6 @@ function Products() {
                         <button className="slider-nav next-nav" onClick={nextImage}>❯</button>
                       </>
                     )}
-                    <div className="zoom-hint">
-                      {isZoomed ? 'Click to zoom out' : 'Click to zoom in'}
-                    </div>
                   </div>
                   <div className="slider-dots">
                     {selectedProduct.images.map((_, idx) => (
@@ -552,21 +543,7 @@ function Products() {
                 </div>
               )}
             </div>
-            
-            <div className="product-detail-info">
-              <span className="product-category-tag">
-                {getCategoryIcon(selectedProduct.category)} {getCategoryName(selectedProduct.category)}
-              </span>
-              <h2>{selectedProduct.name}</h2>
-              <p className="full-description">{selectedProduct.description || 'Experience premium quality and lasting comfort with Balaji Enterprises. Engineered for excellence and durability.'}</p>
-              <div className="contact-actions">
-                <a href={`tel:${phoneNumber}`} className="call-now-btn">📞 Call for Best Price</a>
-                <button onClick={() => openWhatsApp(selectedProduct.name)} className="wa-consult-btn">
-                  💬 Chat on WhatsApp
-                </button>
-                <a href="/book-appointment" className="consult-btn">Book Free Consultation →</a>
-              </div>
-            </div>
+          
           </div>
         </div>
       )}
