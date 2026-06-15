@@ -301,12 +301,6 @@ const Home = () => {
 
   // Slider functionality
   const sliderRef = useRef(null);
-  const scrollSlider = (direction) => {
-    if (sliderRef.current) {
-      const scrollAmount = direction === 'left' ? -400 : 400;
-      sliderRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className="home">
@@ -460,15 +454,6 @@ const Home = () => {
                 </div>
               ))}
             </div>
-            {featuredProducts.length > 1 && (
-              <div className="slider-controls">
-                <button className="slider-arrow" onClick={() => scrollSlider('left')}>❮</button>
-                <button className="slider-arrow" onClick={() => scrollSlider('right')}>❯</button>
-              </div>
-            )}
-          </div>
-          <div className="refresh-hint" style={{textAlign: 'center', marginTop: '20px', fontSize: '0.8rem', color: 'var(--text-muted)'}}>
-            ✨ New products featured every time you visit!
           </div>
         </div>
       </section>
