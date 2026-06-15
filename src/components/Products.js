@@ -15,6 +15,9 @@ function Products() {
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [viewMode, setViewMode] = useState('collections');
   const [layoutView, setLayoutView] = useState('grid'); // 'grid' or 'box'
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
 
   const phoneNumber = '+919872228109';
   const whatsappNumber = '919872228109';
@@ -96,7 +99,7 @@ function Products() {
       console.error('Error loading products:', error);
       const fallbackProducts = [
         { id: 1, name: "Orthopedic Memory Foam Mattress", price: 24999, description: "Premium orthopedic mattress for back pain relief", images: ["https://images-cdn.ubuy.co.in/669eeae2e620e2469e48f254-3-inch-memory-foam-mattress-topper.jpg", "https://www.rentomojo.com/blog/wp-content/uploads/2025/08/benefits-of-orthopedic-mattress.png"], category: "mattress", featured: true },
-        { id: 2, name: "High Back Mesh Office Chair", price: 12999, description: "Ergonomic office chair with lumbar support", images: ["https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/660560s2.jpg?im=Resize,width=750"], category: "office-chair", featured: true },
+        { id: 2, name: "High Back Mesh Office Chair", price: 12999, description: "Ergonomic office chair with lumbar support", images: ["https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/660560s2.jpg?im=Resize,width=750", "https://example.com/office-chair-2.jpg"], category: "office-chair", featured: true },
         { id: 3, name: "Premium Plastic Chair (Set of 4)", price: 5999, description: "Heavy-duty plastic chairs for home/office", images: ["https://m.media-amazon.com/images/I/71bLn6bjYuL.jpg"], category: "plastic-chair", featured: true },
         { id: 4, name: "Luxury Executive Office Chair", price: 24999, description: "Premium leather executive chair", images: ["https://www.duroflexworld.com/cdn/shop/files/2_2026e6ee-a9e8-4ff5-88c7-104fea9cefb8.jpg?v=1744560694&width=800"], category: "office-chair", featured: true },
         { id: 5, name: "Bone Health Orthopedic Mattress", price: 34999, description: "Doctor-approved orthopedic mattress", images: ["https://www.rentomojo.com/blog/wp-content/uploads/2025/08/benefits-of-orthopedic-mattress.png"], category: "mattress", featured: true },
@@ -163,25 +166,44 @@ function Products() {
 
   useEffect(() => {
     setCurrentImageIndex(0);
+    setZoomLevel(1);
+    setIsZoomed(false);
   }, [selectedProduct]);
 
   const getCategoryName = useCallback((category) => {
     return getCategoryDisplayName(category);
   }, [getCategoryDisplayName]);
 
-  const nextImage = (e) => {
-    e.stopPropagation();
+  const nextImage = (e, isModal = true) => {
+    if (e) e.stopPropagation();
     if (selectedProduct && selectedProduct.images && selectedProduct.images.length > 0) {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedProduct.images.length);
     }
   };
 
-  const prevImage = (e) => {
-    e.stopPropagation();
+  const prevImage = (e, isModal = true) => {
+    if (e) e.stopPropagation();
     if (selectedProduct && selectedProduct.images && selectedProduct.images.length > 0) {
       setCurrentImageIndex((prevIndex) => (prevIndex - 1 + selectedProduct.images.length) % selectedProduct.images.length);
     }
   };
+
+  // For product card image navigation
+  const handleCardNextImage = (e, product, currentIdx) => {
+    e.stopPropagation();
+    const newIndex = (currentIdx + 1) % (product.images?.length || 1);
+    // Update the product's images array order temporarily for UI, but we need to manage state
+    // Since we can't directly modify product, we'll use a local state for image indices per product
+    setProductImageIndices(prev => ({ ...prev, [product.id]: newIndex }));
+  };
+
+  const handleCardPrevImage = (e, product, currentIdx) => {
+    e.stopPropagation();
+    const newIndex = (currentIdx - 1 + (product.images?.length || 1)) % (product.images?.length || 1);
+    setProductImageIndices(prev => ({ ...prev, [product.id]: newIndex }));
+  };
+
+  const [productImageIndices, setProductImageIndices] = useState({});
 
   const openWhatsApp = (productName) => {
     const message = encodeURIComponent(`Hello Balaji Enterprises, I'm interested in the "${productName}". Could you please share more details and the best price?`);
@@ -194,6 +216,7 @@ function Products() {
     setSearchTerm('');
     setSortBy('default');
     setLayoutView('grid');
+    setProductImageIndices({});
     setTimeout(() => {
       document.getElementById('products-view')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
@@ -204,6 +227,7 @@ function Products() {
     setViewMode('collections');
     setSearchTerm('');
     setSortBy('default');
+    setProductImageIndices({});
   };
 
   const handleSearchChange = (e) => {
@@ -212,6 +236,20 @@ function Products() {
 
   const clearSearch = () => {
     setSearchTerm('');
+  };
+
+  // Zoom handlers
+  const handleMouseMove = (e) => {
+    if (!isZoomed) return;
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setZoomPosition({ x: Math.min(Math.max(x, 0), 100), y: Math.min(Math.max(y, 0), 100) });
+  };
+
+  const handleZoomToggle = () => {
+    setIsZoomed(!isZoomed);
+    setZoomLevel(isZoomed ? 1 : 2.5);
   };
 
   return (
@@ -238,6 +276,7 @@ function Products() {
           <div className="container">
             <div className="section-header">
               <span className="section-subtitle">Shop by Category</span>
+              <br></br>
               <h2>Browse Our <span>Collections</span></h2>
               <p>Choose from our wide range of premium furniture solutions</p>
             </div>
@@ -368,58 +407,80 @@ function Products() {
               </div>
             ) : (
               <div className={`products-container ${layoutView === 'grid' ? 'grid-view' : 'box-view'}`}>
-                {filteredProducts.map(product => (
-                  <div key={product.id} className="product-card" onClick={() => setSelectedProduct(product)}>
-                    <div className="product-image-container">
-                      {product.images && product.images[0] ? (
-                        <img 
-                          src={product.images[0]} 
-                          alt={product.name} 
-                          className="product-image"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.src = 'https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg?auto=compress&cs=tinysrgb&w=600';
-                          }}
-                        />
-                      ) : (
-                        <div className="image-placeholder">
-                          <span>{getCategoryIcon(product.category)}</span>
+                {filteredProducts.map(product => {
+                  const currentImageIdx = productImageIndices[product.id] || 0;
+                  const hasMultipleImages = product.images && product.images.length > 1;
+                  return (
+                    <div key={product.id} className="product-card" onClick={() => setSelectedProduct(product)}>
+                      <div className="product-image-container">
+                        {product.images && product.images[currentImageIdx] ? (
+                          <>
+                            <img 
+                              src={product.images[currentImageIdx]} 
+                              alt={product.name} 
+                              className="product-image"
+                              loading="lazy"
+                              onError={(e) => {
+                                e.target.src = 'https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg?auto=compress&cs=tinysrgb&w=600';
+                              }}
+                            />
+                            {hasMultipleImages && (
+                              <>
+                                <button 
+                                  className="card-slider-nav card-prev-nav" 
+                                  onClick={(e) => handleCardPrevImage(e, product, currentImageIdx)}
+                                  aria-label="Previous image"
+                                >
+                                  ❮
+                                </button>
+                                <button 
+                                  className="card-slider-nav card-next-nav" 
+                                  onClick={(e) => handleCardNextImage(e, product, currentImageIdx)}
+                                  aria-label="Next image"
+                                >
+                                  ❯
+                                </button>
+                                <div className="card-image-counter">
+                                  {currentImageIdx + 1} / {product.images.length}
+                                </div>
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          <div className="image-placeholder">
+                            <span>{getCategoryIcon(product.category)}</span>
+                          </div>
+                        )}
+                        {hasMultipleImages && (
+                          <div className="image-count-badge">
+                            📸 +{product.images.length - 1}
+                          </div>
+                        )}
+                      </div>
+                      <div className="product-info">
+                        <span className="product-category">
+                          {getCategoryIcon(product.category)} {getCategoryName(product.category)}
+                        </span>
+                        <h3 className="product-title">{product.name}</h3>
+                        <p className="product-description">
+                          {product.description && product.description.length > 60 
+                            ? `${product.description.substring(0, 60)}...` 
+                            : product.description || 'Premium quality product for lasting comfort'}
+                        </p>
+                        <div className="product-footer">
+                          <button className="view-details-btn">View Details →</button>
                         </div>
-                      )}
-                      {product.featured && (
-                        <div className="product-badge">⭐ Bestseller</div>
-                      )}
-                      {product.images && product.images.length > 1 && (
-                        <div className="image-count-badge">
-                          📸 +{product.images.length - 1}
-                        </div>
-                      )}
-                    </div>
-                    <div className="product-info">
-                      <span className="product-category">
-                        {getCategoryIcon(product.category)} {getCategoryName(product.category)}
-                      </span>
-                      <h3 className="product-title">{product.name}</h3>
-                      {/*<div className="product-price">₹{product.price?.toLocaleString() || '0'}</div>*/}
-                      <p className="product-description">
-                        {product.description && product.description.length > 60 
-                          ? `${product.description.substring(0, 60)}...` 
-                          : product.description || 'Premium quality product for lasting comfort'}
-                      </p>
-
-                      <div className="product-footer">
-                        <button className="view-details-btn">View Details →</button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
         </section>
       )}
 
-      {/* Product Modal - Same as before */}
+      {/* Product Modal with Zoom Feature */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
           <div className="modal-content product-detail-modal" onClick={(e) => e.stopPropagation()}>
@@ -428,10 +489,23 @@ function Products() {
             <div className="product-detail-gallery">
               {selectedProduct.images && selectedProduct.images.length > 0 ? (
                 <div className="image-slider-container">
-                  <div className="main-slider-image">
+                  <div 
+                    className={`main-slider-image ${isZoomed ? 'zoomed' : ''}`}
+                    onMouseMove={handleMouseMove}
+                    onClick={handleZoomToggle}
+                    style={{
+                      '--zoom-x': `${zoomPosition.x}%`,
+                      '--zoom-y': `${zoomPosition.y}%`,
+                      cursor: isZoomed ? 'zoom-out' : 'zoom-in'
+                    }}
+                  >
                     <img 
                       src={selectedProduct.images[currentImageIndex]} 
                       alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
+                      style={{
+                        transform: isZoomed ? `scale(${zoomLevel})` : 'scale(1)',
+                        transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                      }}
                     />
                     {selectedProduct.images.length > 1 && (
                       <>
@@ -439,6 +513,9 @@ function Products() {
                         <button className="slider-nav next-nav" onClick={nextImage}>❯</button>
                       </>
                     )}
+                    <div className="zoom-hint">
+                      {isZoomed ? 'Click to zoom out' : 'Click to zoom in'}
+                    </div>
                   </div>
                   <div className="slider-dots">
                     {selectedProduct.images.map((_, idx) => (
@@ -460,6 +537,8 @@ function Products() {
                         onClick={(e) => {
                           e.stopPropagation();
                           setCurrentImageIndex(idx);
+                          setIsZoomed(false);
+                          setZoomLevel(1);
                         }}
                       >
                         <img src={img} alt={`Thumbnail ${idx + 1}`} />
@@ -479,8 +558,6 @@ function Products() {
                 {getCategoryIcon(selectedProduct.category)} {getCategoryName(selectedProduct.category)}
               </span>
               <h2>{selectedProduct.name}</h2>
-              {/*<div className="price-tag">₹{selectedProduct.price?.toLocaleString() || '0'}</div>*/}
-
               <p className="full-description">{selectedProduct.description || 'Experience premium quality and lasting comfort with Balaji Enterprises. Engineered for excellence and durability.'}</p>
               <div className="contact-actions">
                 <a href={`tel:${phoneNumber}`} className="call-now-btn">📞 Call for Best Price</a>
