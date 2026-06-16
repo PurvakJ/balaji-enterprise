@@ -14,11 +14,16 @@ function Products() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [viewMode, setViewMode] = useState('collections');
-  const [layoutView, setLayoutView] = useState('grid'); // 'grid' or 'box'
+  const [layoutView, setLayoutView] = useState('grid');
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
-
+  
+  // Swipe states
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const [swipeHintShown, setSwipeHintShown] = useState(true);
 
   const getCategoryDisplayName = useCallback((categoryValue) => {
     const displayNames = {
@@ -166,6 +171,7 @@ function Products() {
     setCurrentImageIndex(0);
     setZoomLevel(1);
     setIsZoomed(false);
+    setSwipeHintShown(true);
   }, [selectedProduct]);
 
   const getCategoryName = useCallback((category) => {
@@ -176,6 +182,8 @@ function Products() {
     if (e) e.stopPropagation();
     if (selectedProduct && selectedProduct.images && selectedProduct.images.length > 0) {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedProduct.images.length);
+      setIsZoomed(false);
+      setZoomLevel(1);
     }
   };
 
@@ -183,6 +191,58 @@ function Products() {
     if (e) e.stopPropagation();
     if (selectedProduct && selectedProduct.images && selectedProduct.images.length > 0) {
       setCurrentImageIndex((prevIndex) => (prevIndex - 1 + selectedProduct.images.length) % selectedProduct.images.length);
+      setIsZoomed(false);
+      setZoomLevel(1);
+    }
+  };
+
+  // Swipe handlers
+  const handleTouchStart = (e) => {
+    if (!selectedProduct?.images || selectedProduct.images.length <= 1) return;
+    setTouchStartX(e.touches[0].clientX);
+    setTouchEndX(e.touches[0].clientX);
+    setIsSwiping(true);
+    
+    // Hide swipe hint on first touch
+    if (swipeHintShown) {
+      setSwipeHintShown(false);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isSwiping || !selectedProduct?.images || selectedProduct.images.length <= 1) return;
+    setTouchEndX(e.touches[0].clientX);
+    
+    const diff = touchStartX - e.touches[0].clientX;
+    if (Math.abs(diff) > 10) {
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!isSwiping || !selectedProduct?.images || selectedProduct.images.length <= 1) {
+      setIsSwiping(false);
+      return;
+    }
+    setIsSwiping(false);
+    
+    const swipeDistance = touchStartX - touchEndX;
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // Swipe left - next image
+        const nextIndex = (currentImageIndex + 1) % selectedProduct.images.length;
+        setCurrentImageIndex(nextIndex);
+        setIsZoomed(false);
+        setZoomLevel(1);
+      } else {
+        // Swipe right - previous image
+        const prevIndex = (currentImageIndex - 1 + selectedProduct.images.length) % selectedProduct.images.length;
+        setCurrentImageIndex(prevIndex);
+        setIsZoomed(false);
+        setZoomLevel(1);
+      }
     }
   };
 
@@ -190,8 +250,6 @@ function Products() {
   const handleCardNextImage = (e, product, currentIdx) => {
     e.stopPropagation();
     const newIndex = (currentIdx + 1) % (product.images?.length || 1);
-    // Update the product's images array order temporarily for UI, but we need to manage state
-    // Since we can't directly modify product, we'll use a local state for image indices per product
     setProductImageIndices(prev => ({ ...prev, [product.id]: newIndex }));
   };
 
@@ -202,7 +260,6 @@ function Products() {
   };
 
   const [productImageIndices, setProductImageIndices] = useState({});
-
 
   const handleCollectionClick = (categoryValue) => {
     setSelectedCollection(categoryValue);
@@ -474,7 +531,7 @@ function Products() {
         </section>
       )}
 
-      {/* Product Modal with Zoom Feature */}
+      {/* Product Modal with Zoom and Swipe Feature */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
           <div className="modal-content product-detail-modal" onClick={(e) => e.stopPropagation()}>
@@ -483,58 +540,66 @@ function Products() {
             <div className="product-detail-gallery">
               {selectedProduct.images && selectedProduct.images.length > 0 ? (
                 <div className="image-slider-container">
-  <div className="image-slider-wrapper">
-    <div 
-      className={`main-slider-image ${isZoomed ? 'zoomed' : ''}`}
-      onMouseMove={handleMouseMove}
-      onClick={handleZoomToggle}
-      style={{
-        '--zoom-x': `${zoomPosition.x}%`,
-        '--zoom-y': `${zoomPosition.y}%`,
-        cursor: isZoomed ? 'zoom-out' : 'zoom-in'
-      }}
-    >
-      <img 
-        src={selectedProduct.images[currentImageIndex]} 
-        alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
-        style={{
-          transform: isZoomed ? `scale(${zoomLevel})` : 'scale(1)',
-          transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
-        }}
-      />
-      {selectedProduct.images.length > 1 && (
-        <>
-          <button className="slider-nav prev-nav" onClick={prevImage}>❮</button>
-          <button className="slider-nav next-nav" onClick={nextImage}>❯</button>
-        </>
-      )}
-    </div>
-    
-    <div className="thumbnail-strip">
-      {selectedProduct.images.map((img, idx) => (
-        <div
-          key={idx}
-          className={`thumbnail ${currentImageIndex === idx ? 'active' : ''}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setCurrentImageIndex(idx);
-            setIsZoomed(false);
-            setZoomLevel(1);
-          }}
-        >
-          <img src={img} alt={`Thumbnail ${idx + 1}`} />
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
+                  <div 
+                    className="image-slider-wrapper"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                  >
+                    <div 
+                      className={`main-slider-image ${isZoomed ? 'zoomed' : ''}`}
+                      onMouseMove={handleMouseMove}
+                      onClick={handleZoomToggle}
+                      style={{
+                        '--zoom-x': `${zoomPosition.x}%`,
+                        '--zoom-y': `${zoomPosition.y}%`,
+                        cursor: isZoomed ? 'zoom-out' : 'zoom-in'
+                      }}
+                    >
+                      <img 
+                        src={selectedProduct.images[currentImageIndex]} 
+                        alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
+                        style={{
+                          transform: isZoomed ? `scale(${zoomLevel})` : 'scale(1)',
+                          transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                        }}
+                        draggable={false}
+                      />
+                      {selectedProduct.images.length > 1 && (
+                        <>
+                          <button className="slider-nav prev-nav" onClick={prevImage}>❮</button>
+                          <button className="slider-nav next-nav" onClick={nextImage}>❯</button>
+
+                        </>
+                      )}
+                    </div>
+                    
+                    <div className="thumbnail-strip">
+                      {selectedProduct.images.map((img, idx) => (
+                        <div
+                          key={idx}
+                          className={`thumbnail ${currentImageIndex === idx ? 'active' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentImageIndex(idx);
+                            setIsZoomed(false);
+                            setZoomLevel(1);
+                            setSwipeHintShown(false);
+                          }}
+                        >
+                          <img src={img} alt={`Thumbnail ${idx + 1}`} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
               ) : (
                 <div className="gallery-placeholder">
                   <span>{getCategoryIcon(selectedProduct.category)}</span>
                 </div>
               )}
             </div>
-          
           </div>
         </div>
       )}

@@ -17,7 +17,7 @@ function Footer() {
           <div className="footer-logo">
           <div className="logo-icon">
   <img
-    src="https://i.postimg.cc/G3sSFqGg/871986e1-b18c-470c-8265-4a4ab45e1906.png"
+    src="https://i.postimg.cc/tJDt0M0S/balaji-removebg-preview-(1).pngg"
     alt="Balaji Enterprise Logo"
     className="logo-image"
   />
