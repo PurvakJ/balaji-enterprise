@@ -483,60 +483,51 @@ function Products() {
             <div className="product-detail-gallery">
               {selectedProduct.images && selectedProduct.images.length > 0 ? (
                 <div className="image-slider-container">
-                  <div 
-                    className={`main-slider-image ${isZoomed ? 'zoomed' : ''}`}
-                    onMouseMove={handleMouseMove}
-                    onClick={handleZoomToggle}
-                    style={{
-                      '--zoom-x': `${zoomPosition.x}%`,
-                      '--zoom-y': `${zoomPosition.y}%`,
-                      cursor: isZoomed ? 'zoom-out' : 'zoom-in'
-                    }}
-                  >
-                    <img 
-                      src={selectedProduct.images[currentImageIndex]} 
-                      alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
-                      style={{
-                        transform: isZoomed ? `scale(${zoomLevel})` : 'scale(1)',
-                        transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
-                      }}
-                    />
-                    {selectedProduct.images.length > 1 && (
-                      <>
-                        <button className="slider-nav prev-nav" onClick={prevImage}>❮</button>
-                        <button className="slider-nav next-nav" onClick={nextImage}>❯</button>
-                      </>
-                    )}
-                  </div>
-                  <div className="slider-dots">
-                    {selectedProduct.images.map((_, idx) => (
-                      <button
-                        key={idx}
-                        className={`slider-dot ${currentImageIndex === idx ? 'active' : ''}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentImageIndex(idx);
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div className="thumbnail-strip">
-                    {selectedProduct.images.map((img, idx) => (
-                      <div
-                        key={idx}
-                        className={`thumbnail ${currentImageIndex === idx ? 'active' : ''}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCurrentImageIndex(idx);
-                          setIsZoomed(false);
-                          setZoomLevel(1);
-                        }}
-                      >
-                        <img src={img} alt={`Thumbnail ${idx + 1}`} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+  <div className="image-slider-wrapper">
+    <div 
+      className={`main-slider-image ${isZoomed ? 'zoomed' : ''}`}
+      onMouseMove={handleMouseMove}
+      onClick={handleZoomToggle}
+      style={{
+        '--zoom-x': `${zoomPosition.x}%`,
+        '--zoom-y': `${zoomPosition.y}%`,
+        cursor: isZoomed ? 'zoom-out' : 'zoom-in'
+      }}
+    >
+      <img 
+        src={selectedProduct.images[currentImageIndex]} 
+        alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
+        style={{
+          transform: isZoomed ? `scale(${zoomLevel})` : 'scale(1)',
+          transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+        }}
+      />
+      {selectedProduct.images.length > 1 && (
+        <>
+          <button className="slider-nav prev-nav" onClick={prevImage}>❮</button>
+          <button className="slider-nav next-nav" onClick={nextImage}>❯</button>
+        </>
+      )}
+    </div>
+    
+    <div className="thumbnail-strip">
+      {selectedProduct.images.map((img, idx) => (
+        <div
+          key={idx}
+          className={`thumbnail ${currentImageIndex === idx ? 'active' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentImageIndex(idx);
+            setIsZoomed(false);
+            setZoomLevel(1);
+          }}
+        >
+          <img src={img} alt={`Thumbnail ${idx + 1}`} />
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
               ) : (
                 <div className="gallery-placeholder">
                   <span>{getCategoryIcon(selectedProduct.category)}</span>
