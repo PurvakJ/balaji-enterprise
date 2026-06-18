@@ -107,11 +107,11 @@ function Products() {
       console.error('Error loading products:', error);
       const fallbackProducts = [
         { id: 1, name: "Orthopedic Memory Foam Mattress", price: 24999, description: "Premium orthopedic mattress for back pain relief", images: ["https://i.postimg.cc/nzhs51Z0/Bed-1-merged-(1)-page-0001.jpg", "https://i.postimg.cc/P5188x2m/Bed-1-merged-(1)-page-0002.jpg"], category: "mattress", featured: true },
-        { id: 2, name: "High Back Mesh Office Chair", price: 12999, description: "Ergonomic office chair with lumbar support", images: ["https://i.postimg.cc/sxT07WR3/Chair-1-merged-page-0001.jpg", "https://i.postimg.cc/BZpzdr1S/Chair-1-merged-page-0010.jpg"], category: "office-chair", featured: true },
+        { id: 2, name: "High Back Mesh Office Chair", price: 12999, description: "Ergonomic office chair with lumbar support", images: ["https://i.postimg.cc/sxT07WR3/Chair-1-merged-page-0001.jpg", "https://i.postimg.cc/BZpzdr1S/Chair-1-merged-page-0010.jpg"], category: "plastic-chair", featured: true },
         { id: 5, name: "Bone Health Orthopedic Mattress", price: 34999, description: "Doctor-approved orthopedic mattress", images: ["https://i.postimg.cc/ZKbTLqb5/Bed-25-merged-page-0001.jpg"], category: "mattress", featured: true },
         { id: 6, name: "Industrial Plastic Chair (Pack of 6)", price: 8999, description: "Extra heavy-duty plastic chairs", images: ["https://i.postimg.cc/W15gV7w4/Chair-127-merged-page-0009.jpg"], category: "plastic-chair", featured: true },
         { id: 8, name: "Reception Sofa Chair", price: 15999, description: "Premium reception chair", images: ["https://i.postimg.cc/C5rmzVjY/Chair-19-merged-page-0015.jpg"], category: "plastic-chair", featured: true },
-        { id: 9, name: "Ergonomic Study Chair", price: 7999, description: "Comfortable study chair for students", images: ["https://i.postimg.cc/wB52DNXY/Chair-37-merged-page-0013.jpg"], category: "study", featured: true },
+        { id: 9, name: "Ergonomic Study Chair", price: 7999, description: "Comfortable study chair for students", images: ["https://i.postimg.cc/wB52DNXY/Chair-37-merged-page-0013.jpg"], category: "plastic-chair", featured: true },
         { id: 10, name: "Modern Dining Chair Set", price: 12999, description: "Set of 4 modern Plastic chairs", images: ["https://i.postimg.cc/LsyTypbP/Chair-91-merged-page-0013.jpg"], category: "plastic-chair", featured: true },
       ];
       setProducts(fallbackProducts);
