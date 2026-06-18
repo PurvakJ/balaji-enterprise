@@ -167,6 +167,17 @@ function App() {
             <Products />
           </Layout>
         } />
+        {/* New routes for product collections - matches your URL structure */}
+        <Route path="/products/:category" element={
+          <Layout>
+            <Products />
+          </Layout>
+        } />
+        <Route path="/products/:category/:id" element={
+          <Layout>
+            <Products />
+          </Layout>
+        } />
         <Route path="/about" element={
           <Layout>
             <About />

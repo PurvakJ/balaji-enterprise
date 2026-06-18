@@ -1,9 +1,13 @@
 // Products.js
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getProducts } from '../api';
 import './Products.css';
 
 function Products() {
+  const navigate = useNavigate();
+  const { category, id } = useParams();
+  
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -24,6 +28,7 @@ function Products() {
   const [touchEndX, setTouchEndX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const [swipeHintShown, setSwipeHintShown] = useState(true);
+  const [productImageIndices, setProductImageIndices] = useState({});
 
   const getCategoryDisplayName = useCallback((categoryValue) => {
     const displayNames = {
@@ -155,6 +160,49 @@ function Products() {
     return filtered;
   }, [sortBy]);
 
+  // Handle URL-based category selection
+  useEffect(() => {
+    if (category && categories.length > 0) {
+      const decodedCategory = decodeURIComponent(category);
+      const categoryExists = categories.some(cat => 
+        cat.value === decodedCategory || 
+        cat.label.toLowerCase() === decodedCategory.toLowerCase()
+      );
+      
+      if (categoryExists) {
+        const matchedCategory = categories.find(cat => 
+          cat.value === decodedCategory || 
+          cat.label.toLowerCase() === decodedCategory.toLowerCase()
+        );
+        setSelectedCollection(matchedCategory.value);
+        setViewMode('products');
+      } else {
+        // If category doesn't exist, go back to collections view
+        setViewMode('collections');
+        setSelectedCollection(null);
+        // Navigate to products if invalid category
+        if (category) {
+          navigate('/products');
+        }
+      }
+    } else if (!category) {
+      setViewMode('collections');
+      setSelectedCollection(null);
+    }
+  }, [category, categories, navigate]);
+
+  // Handle product ID from URL
+  useEffect(() => {
+    if (id && products.length > 0 && selectedCollection) {
+      const productId = parseInt(id);
+      const product = products.find(p => p.id === productId && p.category === selectedCollection);
+      if (product) {
+        setSelectedProduct(product);
+        setCurrentImageIndex(0);
+      }
+    }
+  }, [id, products, selectedCollection]);
+
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
@@ -203,7 +251,6 @@ function Products() {
     setTouchEndX(e.touches[0].clientX);
     setIsSwiping(true);
     
-    // Hide swipe hint on first touch
     if (swipeHintShown) {
       setSwipeHintShown(false);
     }
@@ -231,13 +278,11 @@ function Products() {
     
     if (Math.abs(swipeDistance) > minSwipeDistance) {
       if (swipeDistance > 0) {
-        // Swipe left - next image
         const nextIndex = (currentImageIndex + 1) % selectedProduct.images.length;
         setCurrentImageIndex(nextIndex);
         setIsZoomed(false);
         setZoomLevel(1);
       } else {
-        // Swipe right - previous image
         const prevIndex = (currentImageIndex - 1 + selectedProduct.images.length) % selectedProduct.images.length;
         setCurrentImageIndex(prevIndex);
         setIsZoomed(false);
@@ -246,7 +291,6 @@ function Products() {
     }
   };
 
-  // For product card image navigation
   const handleCardNextImage = (e, product, currentIdx) => {
     e.stopPropagation();
     const newIndex = (currentIdx + 1) % (product.images?.length || 1);
@@ -259,8 +303,6 @@ function Products() {
     setProductImageIndices(prev => ({ ...prev, [product.id]: newIndex }));
   };
 
-  const [productImageIndices, setProductImageIndices] = useState({});
-
   const handleCollectionClick = (categoryValue) => {
     setSelectedCollection(categoryValue);
     setViewMode('products');
@@ -268,6 +310,10 @@ function Products() {
     setSortBy('default');
     setLayoutView('grid');
     setProductImageIndices({});
+    
+    // Update URL with category
+    navigate(`/product/${encodeURIComponent(categoryValue)}`);
+    
     setTimeout(() => {
       document.getElementById('products-view')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
@@ -279,6 +325,10 @@ function Products() {
     setSearchTerm('');
     setSortBy('default');
     setProductImageIndices({});
+    setSelectedProduct(null);
+    
+    // Navigate back to products page without category
+    navigate('/products');
   };
 
   const handleSearchChange = (e) => {
@@ -287,6 +337,14 @@ function Products() {
 
   const clearSearch = () => {
     setSearchTerm('');
+  };
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    // Update URL with product ID
+    if (selectedCollection) {
+      navigate(`/product/${encodeURIComponent(selectedCollection)}/${product.id}`);
+    }
   };
 
   // Zoom handlers
@@ -301,6 +359,16 @@ function Products() {
   const handleZoomToggle = () => {
     setIsZoomed(!isZoomed);
     setZoomLevel(isZoomed ? 1 : 2.5);
+  };
+
+  // Close modal and update URL
+  const closeModal = () => {
+    setSelectedProduct(null);
+    if (selectedCollection) {
+      navigate(`/product/${encodeURIComponent(selectedCollection)}`);
+    } else {
+      navigate('/products');
+    }
   };
 
   return (
@@ -371,6 +439,7 @@ function Products() {
       {viewMode === 'products' && selectedCollection && (
         <section className="products-view" id="products-view">
           <div className="container">
+            
             <button className="back-to-collections" onClick={handleBackToCollections}>
               ← Back to All Collections
             </button>
@@ -462,7 +531,7 @@ function Products() {
                   const currentImageIdx = productImageIndices[product.id] || 0;
                   const hasMultipleImages = product.images && product.images.length > 1;
                   return (
-                    <div key={product.id} className="product-card" onClick={() => setSelectedProduct(product)}>
+                    <div key={product.id} className="product-card" onClick={() => handleProductClick(product)}>
                       <div className="product-image-container">
                         {product.images && product.images[currentImageIdx] ? (
                           <>
@@ -533,9 +602,9 @@ function Products() {
 
       {/* Product Modal with Zoom and Swipe Feature */}
       {selectedProduct && (
-        <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
+        <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content product-detail-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setSelectedProduct(null)}>×</button>
+            <button className="close-modal" onClick={closeModal}>×</button>
             
             <div className="product-detail-gallery">
               {selectedProduct.images && selectedProduct.images.length > 0 ? (
@@ -569,7 +638,6 @@ function Products() {
                         <>
                           <button className="slider-nav prev-nav" onClick={prevImage}>❮</button>
                           <button className="slider-nav next-nav" onClick={nextImage}>❯</button>
-
                         </>
                       )}
                     </div>
@@ -592,7 +660,6 @@ function Products() {
                       ))}
                     </div>
                   </div>
-
                 </div>
               ) : (
                 <div className="gallery-placeholder">

@@ -96,9 +96,27 @@ const Home = () => {
 
   // Categories
   const categories = [
-    { name: "Premium Mattresses", icon: "🛌", link: "/products?category=mattress", description: "Orthopedic & memory foam options", image: "https://i.pinimg.com/1200x/10/07/35/10073560c71c919c757c20ef9b64ccd1.jpg" },
-    { name: "Office Chairs", icon: "💺", link: "/products?category=office-chair", description: "Ergonomic designs for professionals", image: "https://i.pinimg.com/1200x/4c/be/65/4cbe65b83a2adcef4f7788d1b3acddac.jpg" },
-    { name: "Plastic Chairs", icon: "🪑", link: "/products?category=plastic-chair", description: "Durable & stylish seating solutions", image: "https://i.pinimg.com/736x/48/65/84/486584894daa9c735ac98755a933fd6b.jpg" }
+    { 
+      name: "Premium Mattresses", 
+      icon: "🛌", 
+      link: "/products/Mattress",  // Updated URL
+      description: "Orthopedic & memory foam options", 
+      image: "https://i.pinimg.com/1200x/10/07/35/10073560c71c919c757c20ef9b64ccd1.jpg" 
+    },
+    { 
+      name: "Tables", 
+      icon: "💺", 
+      link: "/products/Table",  // Updated URL
+      description: "Ergonomic designs for professionals", 
+      image: "https://m.media-amazon.com/images/I/91kWws4bJUL._AC_UF894,1000_QL80_.jpg" 
+    },
+    { 
+      name: "Plastic Chairs", 
+      icon: "🪑", 
+      link: "/products/Plastic%20Chair",  // Updated URL
+      description: "Durable & stylish seating solutions", 
+      image: "https://i.pinimg.com/736x/48/65/84/486584894daa9c735ac98755a933fd6b.jpg" 
+    }
   ];
 
   // Pillars
@@ -423,40 +441,45 @@ const Home = () => {
       </section>
 
       {/* Products Section - Random Products */}
-      <section className="products-section">
-        <div className="container">
-          <div className="section-header reveal">
-            <div className="section-badge-new">Handpicked For You</div><br></br>
-            <h2>Discover Our <span style={{color: 'var(--gold)'}}>Random Picks</span></h2>
-            <p>Fresh selections updated regularly - every visit brings new surprises!</p>
-          </div>
-          <div className="products-slider-container">
-            <div className="products-slider-track" ref={sliderRef}>
-              {featuredProducts.map((product, index) => (
-                <div key={product.id} className="product-slide">
-                  <div className="product-card" onClick={() => setSelectedProduct(product)}>
-                    <div className="product-media">
-                      {product.images && product.images[0] ? (
-                        <img src={product.images[0]} alt={product.name} loading="lazy" />
-                      ) : (
-                        <div className="image-placeholder">{getCategoryIcon(product.category)}</div>
-                      )}
-                    </div>
-                    <div className="product-details">
-                      <span className="product-category">
-                        {getCategoryIcon(product.category)} {getCategoryDisplayName(product.category)}
-                      </span>
-                      <h3>{product.name}</h3>
-                      {/* Uncomment below to show price if needed */}
-                      {/* <div className="product-price">₹{product.price?.toLocaleString() || '0'}</div> */}
-                    </div>
-                  </div>
-                </div>
-              ))}
+<section className="products-section">
+  <div className="container">
+    <div className="section-header reveal">
+      <div className="section-badge-new">Handpicked For You</div><br></br>
+      <h2>Discover Our <span style={{color: 'var(--gold)'}}>Random Picks</span></h2>
+      <p>Fresh selections updated regularly - every visit brings new surprises!</p>
+    </div>
+    <div className="products-slider-container">
+      <div className="products-slider-track" ref={sliderRef}>
+        {featuredProducts.map((product, index) => (
+          <div key={product.id} className="product-slide">
+            <div className="product-card" onClick={() => setSelectedProduct(product)}>
+              <div className="product-media">
+                {product.images && product.images[0] ? (
+                  <img src={product.images[0]} alt={product.name} loading="lazy" />
+                ) : (
+                  <div className="image-placeholder">{getCategoryIcon(product.category)}</div>
+                )}
+              </div>
+              <div className="product-details">
+                <span className="product-category">
+                  {getCategoryIcon(product.category)} {getCategoryDisplayName(product.category)}
+                </span>
+                <h3>{product.name}</h3>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
+    
+    {/* ADD THIS BUTTON SECTION */}
+    <div className="see-all-container reveal" style={{textAlign: 'center', marginTop: '50px'}}>
+      <Link to="/products" className="btn-primary" style={{padding: '18px 50px', fontSize: '1.1rem'}}>
+        View All Products →
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* Product Modal */}
       {selectedProduct && (
